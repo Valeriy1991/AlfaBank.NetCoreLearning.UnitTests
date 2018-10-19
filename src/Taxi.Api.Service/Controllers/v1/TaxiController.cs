@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Core.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Taxi.Api.Service.Controllers.v1
 {
@@ -9,8 +10,7 @@ namespace Taxi.Api.Service.Controllers.v1
         [HttpPost("make-order")]
         public IActionResult MakeOrder([FromBody]MakeOrderTaxiModel model)
         {
-            return
-            View();
+            return Ok();
         }
     }
 }
