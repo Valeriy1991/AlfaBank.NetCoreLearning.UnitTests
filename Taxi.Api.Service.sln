@@ -7,6 +7,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{15CF88BE-606
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Taxi.Api.Service", "src\Taxi.Api.Service\Taxi.Api.Service.csproj", "{6E3EBFB4-9F53-40A9-9E7B-5313EAB26EE9}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{3DE4D7F1-C57A-4414-AF9B-5C382B0EE8FE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
