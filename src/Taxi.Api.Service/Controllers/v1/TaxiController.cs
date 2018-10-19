@@ -10,7 +10,7 @@ namespace Taxi.Api.Service.Controllers.v1
         [HttpPost("make-order")]
         public IActionResult MakeOrder([FromBody]MakeOrderTaxiModel model)
         {
-            return Ok();
+            return Ok("Такси заказано!");
         }
     }
 }

@@ -16,11 +16,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.BusinessLogic", "src\Core.BusinessLogic\Core.BusinessLogic.csproj", "{A98BEAE3-8A1A-4350-94E7-0A7A483D4AC3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.BusinessLogic", "src\Core.BusinessLogic\Core.BusinessLogic.csproj", "{A98BEAE3-8A1A-4350-94E7-0A7A483D4AC3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Models", "src\Core.Models\Core.Models.csproj", "{1CBCD106-E410-4A0D-8931-A1383D6603AA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.Models", "src\Core.Models\Core.Models.csproj", "{1CBCD106-E410-4A0D-8931-A1383D6603AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Database", "src\Core.Database\Core.Database.csproj", "{51BA5710-0A5E-4F28-9F9F-34D68D3145AB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.Database", "src\Core.Database\Core.Database.csproj", "{51BA5710-0A5E-4F28-9F9F-34D68D3145AB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
