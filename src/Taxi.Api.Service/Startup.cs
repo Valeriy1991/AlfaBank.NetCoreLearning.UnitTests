@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Core.BusinessLogic.CommandRequests;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -30,6 +32,8 @@ namespace Taxi.Api.Service
             {
                 c.SwaggerDoc("v1", new Info { Title = "Taxi API", Version = "v1" });
             });
+
+            services.AddMediatR(typeof(MakeTaxiOrderCommandRequest));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
