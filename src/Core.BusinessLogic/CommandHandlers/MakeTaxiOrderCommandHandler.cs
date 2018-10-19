@@ -22,6 +22,14 @@ namespace Core.BusinessLogic.CommandHandlers
             {
                 _logger.LogInformation($"Начато формирование заказа на такси для клиента {request.Phone}");
 
+                // 1. Найти клиента в БД
+
+                // 2. Если не нашли, то добавить в БД как нового клиента
+
+                // 3. Создать новый заказ со статусом "В обработке"
+                
+                // 4. Отправить в СМС номер заказа с датой, запрошенной клиентом
+
                 return (IOutcome) Outcomes.Success();
             }, cancellationToken);
         }

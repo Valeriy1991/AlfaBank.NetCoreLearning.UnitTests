@@ -26,6 +26,9 @@ namespace Taxi.Api.Service
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Почему-то так не работает:
+            //services.AddRouting(options => options.LowercaseUrls = true);
+
             services.AddMvc();
 
             services.AddSwaggerGen(c =>

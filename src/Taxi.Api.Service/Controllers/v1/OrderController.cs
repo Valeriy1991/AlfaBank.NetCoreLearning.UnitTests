@@ -7,12 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 namespace Taxi.Api.Service.Controllers.v1
 {
     [Produces("application/json")]
-    [Route("api/v1/[controller]")]
-    public class TaxiController : Controller
+    [Route("api/v1/order")]
+    public class OrderController : Controller
     {
         private readonly IMediator _mediator;
 
-        public TaxiController(IMediator mediator)
+        public OrderController(IMediator mediator)
         {
             _mediator = mediator;
         }
@@ -22,8 +22,8 @@ namespace Taxi.Api.Service.Controllers.v1
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        [HttpPost("make-order")]
-        public async Task<IActionResult> MakeOrder([FromBody]MakeOrderTaxiModel model)
+        [HttpPost("make")]
+        public async Task<IActionResult> Make([FromBody]MakeOrderTaxiModel model)
         {
             var makeOrderResult = await _mediator.Send(new MakeTaxiOrderCommandRequest()
             {
