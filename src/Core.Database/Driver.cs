@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Core.Database
 {
@@ -8,6 +9,7 @@ namespace Core.Database
         public string FullName { get; set; }
         public string Phone { get; set; }
 
+        [NotMapped]
         public ICollection<Order> Orders { get; set; }
     }
 }
