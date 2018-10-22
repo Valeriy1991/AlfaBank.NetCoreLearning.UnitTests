@@ -30,7 +30,8 @@ namespace Core.Database.Commands
                     Comments = commandContext.Comments,
                     From = commandContext.From,
                     To = commandContext.To,
-                    When = commandContext.When
+                    When = commandContext.When,
+                    Status = "new"
                 };
                 DbContext.Orders.Add(order);
                 DbContext.SaveChanges();

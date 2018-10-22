@@ -6,6 +6,7 @@ using Core.Database;
 using Core.Database.Commands;
 using Core.Database.DbExecutors;
 using Core.Models;
+using Core.Models.Settings;
 using Ether.Outcomes;
 using MediatR;
 using Microsoft.Extensions.Logging;
