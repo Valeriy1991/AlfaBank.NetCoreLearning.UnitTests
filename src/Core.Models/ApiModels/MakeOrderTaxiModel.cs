@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Core.Models
+namespace Core.Models.ApiModels
 {
     /// <summary>
     /// Модель заказа такси

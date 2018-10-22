@@ -1,4 +1,4 @@
-﻿namespace Core.Models
+﻿namespace Core.Models.Enums
 {
     public static class StatusEnum
     {

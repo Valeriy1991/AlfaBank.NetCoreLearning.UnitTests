@@ -1,6 +1,7 @@
 ﻿using System;
 using Core.Database.Abstract;
 using Core.Models;
+using Core.Models.Enums;
 using CQRSlight.Abstract;
 using Ether.Outcomes;
 

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Core.Database
+namespace Core.Models
 {
     public class DriverOrder
     {

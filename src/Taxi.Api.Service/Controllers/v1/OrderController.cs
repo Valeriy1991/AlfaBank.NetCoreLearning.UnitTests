@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Core.BusinessLogic.CommandRequests;
 using Core.Models;
+using Core.Models.ApiModels;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
