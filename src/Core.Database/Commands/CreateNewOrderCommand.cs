@@ -1,5 +1,6 @@
 ﻿using System;
 using Core.Database.Abstract;
+using Core.Models;
 using CQRSlight.Abstract;
 using Ether.Outcomes;
 
@@ -31,7 +32,7 @@ namespace Core.Database.Commands
                     From = commandContext.From,
                     To = commandContext.To,
                     When = commandContext.When,
-                    Status = "new"
+                    Status = StatusEnum.New
                 };
                 DbContext.Orders.Add(order);
                 DbContext.SaveChanges();
