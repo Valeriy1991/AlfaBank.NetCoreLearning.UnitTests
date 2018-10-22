@@ -12,6 +12,7 @@ namespace Core.Database
         public string To { get; set; }
         public string Comments { get; set; }
         public DateTime When { get; set; }
+        public string Status { get; set; }
         
         [NotMapped]
         public ICollection<Driver> Drivers { get; set; }
