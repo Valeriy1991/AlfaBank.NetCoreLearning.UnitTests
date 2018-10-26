@@ -19,4 +19,10 @@
     <ProjectReference Include="..\Core.Models\Core.Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="orders.db">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

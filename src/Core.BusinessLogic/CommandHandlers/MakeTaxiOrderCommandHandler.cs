@@ -1,8 +1,10 @@
-﻿using System.Threading;
+﻿using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Core.BusinessLogic.CommandRequests;
 using Core.BusinessLogic.Notifications;
 using Core.Database;
+using Core.Database.Abstract;
 using Core.Database.Commands;
 using Core.Database.DbExecutors;
 using Core.Models;
@@ -49,8 +51,20 @@ namespace Core.BusinessLogic.CommandHandlers
                 // 2. Отправить клиенту СМС с номером заказа
                 var createdOrder = createOrderResult.Value;
                 var sendResult = SendNotification(createdOrder);
+                if (sendResult.Failure)
+                {
+                    var errorBuilder = new StringBuilder();
+                    errorBuilder.Append($"Заказ № {createdOrder.Id} создан, но отправка емайл-уведомления");
+                    errorBuilder.Append(" завершилась с ошибкой:");
+                    errorBuilder.AppendLine();
+                    errorBuilder.AppendLine(sendResult.ToMultiLine());
 
-                return sendResult;
+                    return (IOutcome) Outcomes.Failure().WithMessage(errorBuilder.ToString());
+                }
+
+                var successMessage = $"Заказ № {createdOrder.Id} создан. Статус - \"{createdOrder.Status}\"";
+                _logger.LogInformation(successMessage);
+                return Outcomes.Success().WithMessage(successMessage);
             }, cancellationToken);
         }
 

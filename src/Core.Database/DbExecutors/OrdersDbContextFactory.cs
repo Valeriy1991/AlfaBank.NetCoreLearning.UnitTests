@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using Core.Database.Abstract;
 using Microsoft.EntityFrameworkCore;
 
 namespace Core.Database.DbExecutors
