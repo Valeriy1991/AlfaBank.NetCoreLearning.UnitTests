@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Swagger;
+using Taxi.Api.Service.Extensions;
 
 namespace Taxi.Api.Service
 {
@@ -31,7 +32,11 @@ namespace Taxi.Api.Service
             // Почему-то так не работает:
             //services.AddRouting(options => options.LowercaseUrls = true);
 
-            services.AddMvc();
+            services.AddMvc(options =>
+            {
+                options.Filters.Add<ModelValidatorActionFilter>(); 
+
+            });
 
             services.AddSwaggerGen(c =>
             {
