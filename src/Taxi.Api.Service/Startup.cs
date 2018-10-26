@@ -1,9 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using Core.BusinessLogic.CommandHandlers;
 using Core.BusinessLogic.CommandRequests;
+using Core.BusinessLogic.Notifications;
 using Core.Database;
+using Core.Database.Abstract;
+using Core.Database.DbExecutors;
+using Core.Models.Settings;
+using DbConn.DbExecutor.Abstract;
+using DbConn.DbExecutor.Dapper;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -19,12 +27,14 @@ namespace Taxi.Api.Service
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
             Configuration = configuration;
+            _env = env;
         }
 
         public IConfiguration Configuration { get; }
+        private IHostingEnvironment _env;
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -32,20 +42,27 @@ namespace Taxi.Api.Service
             // Почему-то так не работает:
             //services.AddRouting(options => options.LowercaseUrls = true);
 
+            services.AddLogging();
+            services.Configure<AppSettings>(Configuration);
+
+            services.AddTransient<IDbExecutorFactory, DapperDbExecutorFactory>();
+            services.AddTransient<IDbContextFactory<OrderContext>, OrdersDbContextFactory>();
+            services.AddTransient<INotifier, SmsNotifier>();
+
+            services.AddMediatR(typeof(MakeTaxiOrderCommandRequest).GetTypeInfo().Assembly);
+
             services.AddMvc(options =>
             {
                 options.Filters.Add<ModelValidatorActionFilter>();
                 options.Filters.Add<ErrorExceptionFilter>();
             });
 
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new Info { Title = "Taxi API", Version = "v1" });
-            });
+            services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new Info {Title = "Taxi API", Version = "v1"}); });
 
             services.AddMediatR(typeof(MakeTaxiOrderCommandRequest));
 
-            services.AddDbContext<OrderContext>(options => options.UseSqlite(@"Data source=orders.db"));
+            services.AddDbContext<OrderContext>(options => options.UseSqlite($"Data Source={_env.ContentRootPath}/data.db"));
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
