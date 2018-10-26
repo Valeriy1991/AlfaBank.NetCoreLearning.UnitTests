@@ -26,6 +26,11 @@ namespace Taxi.Api.Service.Controllers.v1
         [HttpPost("make")]
         public async Task<IActionResult> Make([FromBody]MakeOrderTaxiModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var makeOrderResult = await _mediator.Send(new MakeTaxiOrderCommandRequest()
             {
                 From = model.From,
