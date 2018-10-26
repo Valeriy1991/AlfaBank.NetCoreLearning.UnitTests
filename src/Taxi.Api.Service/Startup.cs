@@ -34,8 +34,8 @@ namespace Taxi.Api.Service
 
             services.AddMvc(options =>
             {
-                options.Filters.Add<ModelValidatorActionFilter>(); 
-
+                options.Filters.Add<ModelValidatorActionFilter>();
+                options.Filters.Add<ErrorExceptionFilter>();
             });
 
             services.AddSwaggerGen(c =>
