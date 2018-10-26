@@ -262,4 +262,5 @@ __pycache__/
 
 
 # Ignore SQLite database
-**/orders.db
+**/*/orders.db
+**/**/orders.db
