@@ -1,7 +1,6 @@
-﻿using System.Data;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
-namespace Core.Database.DbExecutors
+namespace Core.Database.Abstract
 {
     public interface IDbContextFactory<out TDbContext>
     where TDbContext : DbContext
