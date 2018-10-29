@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Core.BusinessLogic.CommandRequests;
@@ -8,6 +9,7 @@ using Core.Database.Abstract;
 using Core.Database.Commands;
 using Core.Database.DbExecutors;
 using Core.Models;
+using Core.Models.Enums;
 using Core.Models.Settings;
 using Ether.Outcomes;
 using MediatR;
@@ -72,6 +74,7 @@ namespace Core.BusinessLogic.CommandHandlers
         {
             using (var dbContext = _dbContextFactory.Create(_appSettings.ConnectionStrings.OrdersDb))
             {
+                /*
                 var command = new CreateNewOrderCommand(dbContext);
                 return command.Execute(new CreateNewOrderCommand.Context()
                 {
@@ -81,6 +84,26 @@ namespace Core.BusinessLogic.CommandHandlers
                     To = request.To,
                     When = request.When
                 });
+                */
+                try
+                {
+                    var order = new Order()
+                    {
+                        Phone = request.Phone,
+                        Comments = request.Comments,
+                        From = request.From,
+                        To = request.To,
+                        When = request.When,
+                        Status = StatusEnum.New
+                    };
+                    dbContext.Orders.Add(order);
+                    dbContext.SaveChanges();
+                    return Outcomes.Success(order);
+                }
+                catch (Exception ex)
+                {
+                    return Outcomes.Failure<Order>().FromException(ex);
+                }
             }
         }
 

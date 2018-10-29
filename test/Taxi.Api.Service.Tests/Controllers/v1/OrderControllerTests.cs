@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Core.BusinessLogic.CommandRequests;
 using Core.Models.ApiModels;
+using Core.Models.ApiModels.Fakes;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
@@ -21,26 +22,14 @@ namespace Taxi.Api.Service.Tests.Controllers.v1
         {
             return new OrderController(mediator);
         }
-
-        private MakeOrderTaxiModel GenerateMakeOrderTaxiModel()
-        {
-            return new MakeOrderTaxiModel()
-            {
-                From = "from-address",
-                To = "to-address",
-                Comments = "some-comments",
-                Phone = "123456789",
-                When = DateTime.Now
-            };
-        }
-
+        
         [Fact]
         public async Task Make__SendMethodOfIMediatorWasCalledAtOnceWithValidRequest()
         {
             // Arrange
             var mediator = Substitute.For<IMediator>();
             var controller = CreateTestedComponent(mediator);
-            var model = GenerateMakeOrderTaxiModel();
+            var model = MakeOrderModelFake.Generate();
             // Act
             await controller.Make(model);
             // Assert
@@ -52,7 +41,7 @@ namespace Taxi.Api.Service.Tests.Controllers.v1
             // Arrange
             var mediator = Substitute.For<IMediator>();
             var controller = CreateTestedComponent(mediator);
-            var model = GenerateMakeOrderTaxiModel();
+            var model = MakeOrderModelFake.Generate();
             // Act
             var result = await controller.Make(model);
             // Assert
@@ -68,7 +57,7 @@ namespace Taxi.Api.Service.Tests.Controllers.v1
             mediator.Send(Arg.Any<MakeTaxiOrderCommandRequest>(), CancellationToken.None)
                 .Throws(info => new Exception(errorMessage));
             var controller = CreateTestedComponent(mediator);
-            var model = GenerateMakeOrderTaxiModel();
+            var model = MakeOrderModelFake.Generate();
             Func<Task> act = () => controller.Make(model);
             // Act
             var ex = Record.ExceptionAsync(act)?.Result;
