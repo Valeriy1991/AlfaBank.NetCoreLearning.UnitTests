@@ -48,6 +48,11 @@ namespace Taxi.Api.Service
             services.AddTransient<IDbExecutorFactory, DapperDbExecutorFactory>();
             services.AddTransient<IDbContextFactory<OrderContext>, OrdersDbContextFactory>();
             services.AddTransient<INotifier, SmsNotifier>();
+            services.AddTransient(provider =>
+            {
+                var appSettingsOptions = provider.GetRequiredService<IOptions<AppSettings>>();
+                return appSettingsOptions.Value;
+            });
 
             services.AddMediatR(typeof(MakeTaxiOrderCommandRequest).GetTypeInfo().Assembly);
 
