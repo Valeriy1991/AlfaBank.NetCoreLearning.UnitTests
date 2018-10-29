@@ -40,7 +40,12 @@ namespace Core.BusinessLogic.Tests.CommandHandlers
 
         private MakeTaxiOrderCommandRequest GenerateCommandRequest()
         {
-            var apiModel = MakeOrderModelFake.Generate();
+            var myCustomPhone = "123-456-789";
+            // 1 способ:
+            //var apiModel = MakeOrderModelFake.Generate();
+            //apiModel.Phone = myCustomPhone;
+            // 2 способ - Fluent API:
+            var apiModel = MakeOrderModelFake.Generate().WithPhone(myCustomPhone);
             return MakeTaxiOrderCommandRequest.Create(apiModel);
         }
 

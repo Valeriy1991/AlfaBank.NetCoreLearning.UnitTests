@@ -41,5 +41,20 @@ namespace Core.Models.ApiModels.Fakes
         {
             return Faker.Generate(count).ToList();
         }
+
+        #region WithPhone
+
+        public static MakeOrderModel WithPhone(this MakeOrderModel model, string phone)
+        {
+            model.Phone = phone;
+            return model;
+        }
+        public static List<MakeOrderModel> WithPhone(this List<MakeOrderModel> models, string phone)
+        {
+            models.ForEach(e => e.WithPhone(phone));
+            return models;
+        }
+
+        #endregion
     }
 }
