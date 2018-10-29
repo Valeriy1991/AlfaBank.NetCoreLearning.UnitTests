@@ -15,8 +15,10 @@ using Core.BusinessLogic.CommandRequests;
 using Core.Models;
 using System.Collections.Generic;
 using Bogus;
+using Core.Database.Commands;
 using Core.Models.ApiModels.Fakes;
 using Core.Models.Settings.Fakes;
+using Ether.Outcomes;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using NSubstitute.ExceptionExtensions;
@@ -50,19 +52,27 @@ namespace Core.BusinessLogic.Tests.CommandHandlers
         }
 
         [Fact]
-        public async Task Handle__CreateNewOrderIsFail__ReturnFailure()
+        public async Task Handle__CreateNewOrderIsFail__ReturnFailure_v1()
         {
             // Arrange
             var errorMessage = $"test-error: {_faker.Random.Words()}";
+            var notifier = Substitute.For<INotifier>();
+            var dbContext = Substitute.For<OrderContext>();
             var appSettings = AppSettingsFake.Generate();
 
             #region DbContext
-
+            
+            // Минусы: 
+            // 1) приходится вникать в логику сохранения нового заказа;
+            // 2) приходится ее воспроизводить, да так, чтобы не возникло ошибок:
+            //      - если мы не зададим, DbSet<Orders> - получим NRE
+            //      - если не зададим поведение SaveChanges() - он выполнится успешно, и мы получим не тот
+            //        результат, который ожидаем
+            
             var ordersDbSet = Substitute.For<DbSet<Order>>();
-            var dbContext = Substitute.For<OrderContext>();
             dbContext.Orders = ordersDbSet;
             dbContext.SaveChanges().Throws(new Exception(errorMessage));
-
+            
             #endregion
 
             #region DbContextFactory
@@ -71,10 +81,55 @@ namespace Core.BusinessLogic.Tests.CommandHandlers
             dbContextFactory.Create(appSettings.ConnectionStrings.OrdersDb).Returns(dbContext);
 
             #endregion
-
-            var notifier = Substitute.For<INotifier>();
-
+            
             var handler = CreateTestedComponent(appSettings, dbContextFactory, notifier);
+            
+            var commandRequest = GenerateCommandRequest();
+            // Act
+            var result = await handler.Handle(commandRequest, CancellationToken.None);
+            // Assert
+            Assert.True(result.Failure);
+            Assert.Contains(errorMessage, result.ToMultiLine());
+        }
+
+
+        [Fact]
+        public async Task Handle__CreateNewOrderIsFail__ReturnFailure_v2()
+        {
+            // Arrange
+            var errorMessage = $"test-error: {_faker.Random.Words()}";
+            var notifier = Substitute.For<INotifier>();
+            var dbContext = Substitute.For<OrderContext>();
+            var appSettings = AppSettingsFake.Generate();
+            
+            #region DbContextFactory
+
+            var dbContextFactory = Substitute.For<IDbContextFactory<OrderContext>>();
+            dbContextFactory.Create(appSettings.ConnectionStrings.OrdersDb).Returns(dbContext);
+
+            #endregion
+            
+            var handler = CreateTestedComponent(appSettings, dbContextFactory, notifier);
+
+            #region CreateNewOrderCommand
+
+            // Минус: немало кода (минус весьма сомнительный, потому что это в нашем примере добавление заказа в БД простое)
+            // Плюс:
+            //      1) изоляция от логики добавления нового заказа в БД
+            //      2) соответственно, отсутствует необходимость дублирования этой логики
+
+            // ВАЖНО: нас не интересует содержимое, нас интересует РЕЗУЛЬТАТ команды создания нового заказа, 
+            // т.к. от этого результата зависит поведение бизнес-компонента (если fail - выйти; если success - двигаемся дальше)
+
+            var createNewOrderCommand = Substitute.For<CreateNewOrderCommand>(dbContext);
+            createNewOrderCommand.Execute(Arg.Any<CreateNewOrderCommand.Context>())
+                // Задаем нужный нам результат
+                .Returns(Outcomes.Failure<Order>().WithMessage(errorMessage));
+            var createNewOrderCommandFactory = Substitute.For<CreateNewOrderCommand.Factory>();
+            createNewOrderCommandFactory.Create(dbContext).Returns(createNewOrderCommand);
+            handler.SetCreateNewOrderCommandFactory(createNewOrderCommandFactory);
+
+            #endregion
 
             var commandRequest = GenerateCommandRequest();
             // Act
