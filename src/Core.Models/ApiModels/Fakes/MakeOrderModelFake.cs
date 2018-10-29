@@ -4,11 +4,11 @@ using System.Diagnostics.CodeAnalysis;
 namespace Core.Models.ApiModels.Fakes
 {
     [ExcludeFromCodeCoverage]
-    public static class MakeOrderTaxiModelFake
+    public static class MakeOrderModelFake
     {
-        public static MakeOrderTaxiModel Generate()
+        public static MakeOrderModel Generate()
         {
-            return new MakeOrderTaxiModel()
+            return new MakeOrderModel()
             {
                 From = "from-address",
                 To = "to-address",

@@ -8,7 +8,7 @@ namespace Core.Models.ApiModels
     /// Модель заказа такси
     /// </summary>
     [DataContract]
-    public class MakeOrderTaxiModel
+    public class MakeOrderModel
     {
         [DataMember(Name = "phone")]
         [Required]

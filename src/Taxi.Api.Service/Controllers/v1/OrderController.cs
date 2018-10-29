@@ -24,7 +24,7 @@ namespace Taxi.Api.Service.Controllers.v1
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost("make")]
-        public async Task<IActionResult> Make([FromBody]MakeOrderTaxiModel model)
+        public async Task<IActionResult> Make([FromBody]MakeOrderModel model)
         {
             var makeOrderResult = await _mediator.Send(new MakeTaxiOrderCommandRequest()
             {

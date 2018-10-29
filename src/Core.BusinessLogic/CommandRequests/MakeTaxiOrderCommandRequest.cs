@@ -13,7 +13,7 @@ namespace Core.BusinessLogic.CommandRequests
         public string Comments { get; set; }
         public DateTime When { get; set; }
 
-        public static MakeTaxiOrderCommandRequest Create(MakeOrderTaxiModel model)
+        public static MakeTaxiOrderCommandRequest Create(MakeOrderModel model)
         {
             return new MakeTaxiOrderCommandRequest()
             {

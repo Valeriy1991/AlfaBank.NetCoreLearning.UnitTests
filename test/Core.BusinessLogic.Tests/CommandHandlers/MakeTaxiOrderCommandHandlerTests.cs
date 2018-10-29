@@ -37,7 +37,7 @@ namespace Core.BusinessLogic.Tests.CommandHandlers
 
         private MakeTaxiOrderCommandRequest GenerateCommandRequest()
         {
-            var apiModel = MakeOrderTaxiModelFake.Generate();
+            var apiModel = MakeOrderModelFake.Generate();
             return MakeTaxiOrderCommandRequest.Create(apiModel);
         }
 

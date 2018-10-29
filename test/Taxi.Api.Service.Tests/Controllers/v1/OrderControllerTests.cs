@@ -29,7 +29,7 @@ namespace Taxi.Api.Service.Tests.Controllers.v1
             // Arrange
             var mediator = Substitute.For<IMediator>();
             var controller = CreateTestedComponent(mediator);
-            var model = MakeOrderTaxiModelFake.Generate();
+            var model = MakeOrderModelFake.Generate();
             // Act
             await controller.Make(model);
             // Assert
@@ -41,7 +41,7 @@ namespace Taxi.Api.Service.Tests.Controllers.v1
             // Arrange
             var mediator = Substitute.For<IMediator>();
             var controller = CreateTestedComponent(mediator);
-            var model = MakeOrderTaxiModelFake.Generate();
+            var model = MakeOrderModelFake.Generate();
             // Act
             var result = await controller.Make(model);
             // Assert
@@ -57,7 +57,7 @@ namespace Taxi.Api.Service.Tests.Controllers.v1
             mediator.Send(Arg.Any<MakeTaxiOrderCommandRequest>(), CancellationToken.None)
                 .Throws(info => new Exception(errorMessage));
             var controller = CreateTestedComponent(mediator);
-            var model = MakeOrderTaxiModelFake.Generate();
+            var model = MakeOrderModelFake.Generate();
             Func<Task> act = () => controller.Make(model);
             // Act
             var ex = Record.ExceptionAsync(act)?.Result;
