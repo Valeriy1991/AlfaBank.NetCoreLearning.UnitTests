@@ -30,12 +30,12 @@ namespace Core.BusinessLogic.Tests.CommandHandlers
         private readonly Faker _faker = new Faker();
 
         private MakeTaxiOrderCommandHandler CreateTestedComponent(
-            IOptions<AppSettings> appSettingsOptions,
+            AppSettings appSettings,
             IDbContextFactory<OrderContext> dbContextFactory,
             INotifier notifier)
         {
             var logger = Substitute.For<ILogger<MakeTaxiOrderCommandHandler>>();
-            return new MakeTaxiOrderCommandHandler(logger, appSettingsOptions, dbContextFactory, notifier);
+            return new MakeTaxiOrderCommandHandler(logger, appSettings, dbContextFactory, notifier);
         }
 
         private MakeTaxiOrderCommandRequest GenerateCommandRequest()
@@ -54,14 +54,7 @@ namespace Core.BusinessLogic.Tests.CommandHandlers
         {
             // Arrange
             var errorMessage = $"test-error: {_faker.Random.Words()}";
-
-            #region AppSettings
-
             var appSettings = AppSettingsFake.Generate();
-            var appSettingsOptions = Substitute.For<IOptions<AppSettings>>();
-            appSettingsOptions.Value.Returns(appSettings);
-
-            #endregion
 
             #region DbContext
 
@@ -81,7 +74,7 @@ namespace Core.BusinessLogic.Tests.CommandHandlers
 
             var notifier = Substitute.For<INotifier>();
 
-            var handler = CreateTestedComponent(appSettingsOptions, dbContextFactory, notifier);
+            var handler = CreateTestedComponent(appSettings, dbContextFactory, notifier);
 
             var commandRequest = GenerateCommandRequest();
             // Act
