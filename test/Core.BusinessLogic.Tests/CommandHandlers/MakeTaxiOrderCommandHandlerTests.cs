@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using Core.BusinessLogic.CommandRequests;
 using Core.Models;
 using System.Collections.Generic;
+using Bogus;
 using Core.Models.ApiModels.Fakes;
 using Core.Models.Settings.Fakes;
 using Microsoft.EntityFrameworkCore;
@@ -26,6 +27,8 @@ namespace Core.BusinessLogic.Tests.CommandHandlers
     [Trait("Category", "Unit")]
     public class MakeTaxiOrderCommandHandlerTests
     {
+        private readonly Faker _faker = new Faker();
+
         private MakeTaxiOrderCommandHandler CreateTestedComponent(
             IOptions<AppSettings> appSettingsOptions,
             IDbContextFactory<OrderContext> dbContextFactory,
@@ -45,7 +48,7 @@ namespace Core.BusinessLogic.Tests.CommandHandlers
         public async Task Handle__CreateNewOrderIsFail__ReturnFailure()
         {
             // Arrange
-            var errorMessage = "test-error-when-creating-new-order";
+            var errorMessage = $"test-error: {_faker.Random.Words()}";
 
             #region AppSettings
 
