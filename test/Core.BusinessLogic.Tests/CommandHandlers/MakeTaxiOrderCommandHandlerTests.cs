@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using Core.BusinessLogic.CommandRequests;
 using Core.Models;
 using System.Collections.Generic;
+using Core.Models.ApiModels.Fakes;
 using Core.Models.Settings.Fakes;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -36,14 +37,8 @@ namespace Core.BusinessLogic.Tests.CommandHandlers
 
         private MakeTaxiOrderCommandRequest GenerateCommandRequest()
         {
-            return new MakeTaxiOrderCommandRequest()
-            {
-                From = "from-address",
-                To = "to-address",
-                Comments = "some-comments",
-                Phone = "123456789",
-                When = DateTime.Now
-            };
+            var apiModel = MakeOrderTaxiModelFake.Generate();
+            return MakeTaxiOrderCommandRequest.Create(apiModel);
         }
 
         [Fact]
