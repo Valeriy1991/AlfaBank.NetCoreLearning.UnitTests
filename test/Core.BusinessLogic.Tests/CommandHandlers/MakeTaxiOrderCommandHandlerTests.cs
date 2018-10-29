@@ -138,5 +138,74 @@ namespace Core.BusinessLogic.Tests.CommandHandlers
             Assert.True(result.Failure);
             Assert.Contains(errorMessage, result.ToMultiLine());
         }
+
+        [Fact]
+        public async Task Handle__CreateNewOrderIsSuccess__CallSendMethodOfINotifierAtOnce()
+        {
+            // Arrange
+            var notifier = Substitute.For<INotifier>();
+            var dbContext = Substitute.For<OrderContext>();
+            var appSettings = AppSettingsFake.Generate();
+            var order = new Order();
+            var commandRequest = GenerateCommandRequest();
+
+            #region DbContextFactory
+
+            var dbContextFactory = Substitute.For<IDbContextFactory<OrderContext>>();
+            dbContextFactory.Create(appSettings.ConnectionStrings.OrdersDb).Returns(dbContext);
+
+            #endregion
+
+            var handler = CreateTestedComponent(appSettings, dbContextFactory, notifier);
+
+            #region CreateNewOrderCommand
+            
+            var createNewOrderCommand = Substitute.For<CreateNewOrderCommand>(dbContext);
+            createNewOrderCommand.Execute(Arg.Any<CreateNewOrderCommand.Context>()).Returns(Outcomes.Success(order));
+            var createNewOrderCommandFactory = Substitute.For<CreateNewOrderCommand.Factory>();
+            createNewOrderCommandFactory.Create(dbContext).Returns(createNewOrderCommand);
+            handler.SetCreateNewOrderCommandFactory(createNewOrderCommandFactory);
+
+            #endregion
+
+            // Act
+            await handler.Handle(commandRequest, CancellationToken.None);
+            // Assert
+            notifier.Received(1).Send(Arg.Any<Notification>());
+        }
+        [Fact]
+        public async Task Handle__CreateNewOrderIsFail__SendMethodOfINotifierWasNotCalled()
+        {
+            // Arrange
+            var notifier = Substitute.For<INotifier>();
+            var dbContext = Substitute.For<OrderContext>();
+            var appSettings = AppSettingsFake.Generate();
+            var commandRequest = GenerateCommandRequest();
+
+            #region DbContextFactory
+
+            var dbContextFactory = Substitute.For<IDbContextFactory<OrderContext>>();
+            dbContextFactory.Create(appSettings.ConnectionStrings.OrdersDb).Returns(dbContext);
+
+            #endregion
+
+            var handler = CreateTestedComponent(appSettings, dbContextFactory, notifier);
+
+            #region CreateNewOrderCommand
+
+            var createNewOrderCommand = Substitute.For<CreateNewOrderCommand>(dbContext);
+            createNewOrderCommand.Execute(Arg.Any<CreateNewOrderCommand.Context>())
+                .Returns(Outcomes.Failure<Order>().WithMessage("test-error"));
+            var createNewOrderCommandFactory = Substitute.For<CreateNewOrderCommand.Factory>();
+            createNewOrderCommandFactory.Create(dbContext).Returns(createNewOrderCommand);
+            handler.SetCreateNewOrderCommandFactory(createNewOrderCommandFactory);
+
+            #endregion
+
+            // Act
+            await handler.Handle(commandRequest, CancellationToken.None);
+            // Assert
+            notifier.Received(0).Send(Arg.Any<Notification>());
+        }
     }
 }
