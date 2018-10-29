@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using Core.BusinessLogic.CommandRequests;
 using Core.Models;
 using System.Collections.Generic;
+using Core.Models.Settings.Fakes;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using NSubstitute.ExceptionExtensions;
@@ -53,20 +54,7 @@ namespace Core.BusinessLogic.Tests.CommandHandlers
 
             #region AppSettings
 
-            var appSettings = new AppSettings()
-            {
-                ConnectionStrings = new ConnectionStringSettings()
-                {
-                    OrdersDb = "test-db"
-                },
-                Notification = new NotificationSettings()
-                {
-                    Sms = new NotificationSettings.SmsSettings()
-                    {
-                        From = "0000"
-                    }
-                }
-            };
+            var appSettings = AppSettingsFake.Generate();
             var appSettingsOptions = Substitute.For<IOptions<AppSettings>>();
             appSettingsOptions.Value.Returns(appSettings);
 
