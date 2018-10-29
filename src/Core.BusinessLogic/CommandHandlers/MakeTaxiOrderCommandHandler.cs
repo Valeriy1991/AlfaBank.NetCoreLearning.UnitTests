@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,6 +25,7 @@ namespace Core.BusinessLogic.CommandHandlers
         private readonly IDbContextFactory<OrderContext> _dbContextFactory;
         private readonly AppSettings _appSettings;
         private readonly INotifier _notifier;
+        private CreateNewOrderCommand.Factory _createNewOrderCommandFactory = new CreateNewOrderCommand.Factory();
 
         public MakeTaxiOrderCommandHandler(
             ILogger<MakeTaxiOrderCommandHandler> logger,
@@ -36,6 +38,16 @@ namespace Core.BusinessLogic.CommandHandlers
             _dbContextFactory = dbContextFactory;
             _notifier = notifier;
         }
+
+        #region For tests
+
+        [ExcludeFromCodeCoverage]
+        public void SetCreateNewOrderCommandFactory(CreateNewOrderCommand.Factory factory)
+        {
+            _createNewOrderCommandFactory = factory;
+        }
+
+        #endregion
 
         public Task<IOutcome> Handle(MakeTaxiOrderCommandRequest request, CancellationToken cancellationToken)
         {
@@ -74,8 +86,7 @@ namespace Core.BusinessLogic.CommandHandlers
         {
             using (var dbContext = _dbContextFactory.Create(_appSettings.ConnectionStrings.OrdersDb))
             {
-                /*
-                var command = new CreateNewOrderCommand(dbContext);
+                var command = _createNewOrderCommandFactory.Create(dbContext);
                 return command.Execute(new CreateNewOrderCommand.Context()
                 {
                     Comments = request.Comments,
@@ -84,26 +95,6 @@ namespace Core.BusinessLogic.CommandHandlers
                     To = request.To,
                     When = request.When
                 });
-                */
-                try
-                {
-                    var order = new Order()
-                    {
-                        Phone = request.Phone,
-                        Comments = request.Comments,
-                        From = request.From,
-                        To = request.To,
-                        When = request.When,
-                        Status = StatusEnum.New
-                    };
-                    dbContext.Orders.Add(order);
-                    dbContext.SaveChanges();
-                    return Outcomes.Success(order);
-                }
-                catch (Exception ex)
-                {
-                    return Outcomes.Failure<Order>().FromException(ex);
-                }
             }
         }
 
