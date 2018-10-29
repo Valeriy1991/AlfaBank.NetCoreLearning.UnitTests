@@ -18,6 +18,14 @@ namespace Core.Database.Commands
             public DateTime When { get; set; }
         }
 
+        public class Factory
+        {
+            public virtual CreateNewOrderCommand Create(OrderContext dbContext)
+            {
+                return new CreateNewOrderCommand(dbContext);
+            }
+        }
+
         public CreateNewOrderCommand(OrderContext dbContext) : base(dbContext)
         {
         }
