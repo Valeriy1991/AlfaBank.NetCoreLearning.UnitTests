@@ -25,12 +25,12 @@ namespace Core.BusinessLogic.CommandHandlers
 
         public MakeTaxiOrderCommandHandler(
             ILogger<MakeTaxiOrderCommandHandler> logger,
-            IOptions<AppSettings> appSettingsOptions,
+            AppSettings appSettings,
             IDbContextFactory<OrderContext> dbContextFactory,
             INotifier notifier)
         {
             _logger = logger;
-            _appSettings = appSettingsOptions.Value;
+            _appSettings = appSettings;
             _dbContextFactory = dbContextFactory;
             _notifier = notifier;
         }
