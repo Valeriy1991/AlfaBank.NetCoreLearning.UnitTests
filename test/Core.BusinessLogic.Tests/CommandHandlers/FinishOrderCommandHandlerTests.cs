@@ -79,5 +79,51 @@ namespace Core.BusinessLogic.Tests.CommandHandlers
             // Assert
             Assert.True(result.Success);
         }
+
+        [Fact]
+        public async Task Handle__OrderHasValidFinishDateTimeAndStatusEqualsFinish()
+        {
+            // Arrange
+            var orderId = _faker.Random.Int(min: 0);
+            var order = new Order() {Id = orderId, FinishDateTime = null, Status = ""};
+            var orders = new List<Order>()
+            {
+                order
+            };
+            var ordersAsQueryable = orders.AsQueryable();
+            var dbContext = Substitute.For<OrderContext>();
+            var appSettings = AppSettingsFake.Generate();
+
+            #region DbContext
+
+            var ordersDbSet = Substitute.For<DbSet<Order>, IQueryable<Order>>();
+            ((IQueryable<Order>) ordersDbSet).Provider.Returns(ordersAsQueryable.Provider);
+            ((IQueryable<Order>) ordersDbSet).Expression.Returns(ordersAsQueryable.Expression);
+            ((IQueryable<Order>) ordersDbSet).ElementType.Returns(ordersAsQueryable.ElementType);
+            ((IQueryable<Order>) ordersDbSet).GetEnumerator().Returns(ordersAsQueryable.GetEnumerator());
+
+            dbContext.Orders.Returns(ordersDbSet);
+            dbContext.SaveChanges().Returns(1);
+
+            #endregion
+
+            #region DbContextFactory
+
+            var dbContextFactory = Substitute.For<IDbContextFactory<OrderContext>>();
+            dbContextFactory.Create(appSettings.ConnectionStrings.OrdersDb).Returns(dbContext);
+
+            #endregion
+
+            var handler = CreateTestedComponent(appSettings, dbContextFactory);
+            var commandRequest = new FinishOrderCommandRequest()
+            {
+                OrderId = orderId
+            };
+            // Act
+            await handler.Handle(commandRequest, CancellationToken.None);
+            // Assert
+            Assert.NotEqual(default(DateTime), order.FinishDateTime);
+            Assert.Equal(StatusEnum.Finished, order.Status);
+        }
     }
 }
