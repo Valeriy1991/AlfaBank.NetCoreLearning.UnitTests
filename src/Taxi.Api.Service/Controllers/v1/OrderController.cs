@@ -36,5 +36,20 @@ namespace Taxi.Api.Service.Controllers.v1
             });
             return Ok(makeOrderResult);
         }
+
+        /// <summary>
+        /// Закрытие заказа
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        [HttpPost("finish/{orderId:int}")]
+        public async Task<IActionResult> Finish(int orderId)
+        {
+            var makeOrderResult = await _mediator.Send(new FinishOrderCommandRequest()
+            {
+                OrderId = orderId
+            });
+            return Ok(makeOrderResult);
+        }
     }
 }
