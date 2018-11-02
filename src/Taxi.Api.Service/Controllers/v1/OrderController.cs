@@ -51,5 +51,24 @@ namespace Taxi.Api.Service.Controllers.v1
             });
             return Ok(makeOrderResult);
         }
+
+        /// <summary>
+        /// Назначить водителя на заказ
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <param name="driverId"></param>
+        /// <returns></returns>
+        [HttpPost("{orderId:int}/set-driver/{driverId:int}")]
+        public async Task<IActionResult> Finish(int orderId, int driverId)
+        {
+            var makeOrderResult = await _mediator.Send(new SetDriverForOrderCommandRequest()
+            {
+                OrderId = orderId,
+                DriverId = driverId
+            });
+            return Ok(makeOrderResult);
+        }
+
+
     }
 }
