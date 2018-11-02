@@ -24,15 +24,30 @@ namespace Taxi.Api.Service.Controllers.v1
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost("make")]
-        public async Task<IActionResult> Make([FromBody]MakeOrderTaxiModel model)
+        public async Task<IActionResult> Make([FromBody]MakeOrderModel model)
         {
-            var makeOrderResult = await _mediator.Send(new MakeTaxiOrderCommandRequest()
+            var makeOrderResult = await _mediator.Send(new MakeOrderCommandRequest()
             {
                 From = model.From,
                 To = model.To,
                 Comments = model.Comments,
                 Phone = model.Phone,
                 When = model.When,
+            });
+            return Ok(makeOrderResult);
+        }
+
+        /// <summary>
+        /// Закрытие заказа
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        [HttpPost("finish/{orderId:int}")]
+        public async Task<IActionResult> Finish(int orderId)
+        {
+            var makeOrderResult = await _mediator.Send(new FinishOrderCommandRequest()
+            {
+                OrderId = orderId
             });
             return Ok(makeOrderResult);
         }
