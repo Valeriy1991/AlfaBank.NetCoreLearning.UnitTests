@@ -33,7 +33,7 @@ namespace Taxi.Api.Service.Tests.Controllers.v1
             // Act
             await controller.Make(model);
             // Assert
-            await mediator.Received(1).Send(Arg.Any<MakeTaxiOrderCommandRequest>());
+            await mediator.Received(1).Send(Arg.Any<MakeOrderCommandRequest>());
         }
         [Fact]
         public async Task Make__ReturnOk()
@@ -54,7 +54,7 @@ namespace Taxi.Api.Service.Tests.Controllers.v1
             // Arrange
             var errorMessage = "test error";
             var mediator = Substitute.For<IMediator>();
-            mediator.Send(Arg.Any<MakeTaxiOrderCommandRequest>(), CancellationToken.None)
+            mediator.Send(Arg.Any<MakeOrderCommandRequest>(), CancellationToken.None)
                 .Throws(info => new Exception(errorMessage));
             var controller = CreateTestedComponent(mediator);
             var model = MakeOrderModelFake.Generate();

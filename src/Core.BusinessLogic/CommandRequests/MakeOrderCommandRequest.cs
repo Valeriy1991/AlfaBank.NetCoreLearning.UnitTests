@@ -5,7 +5,7 @@ using MediatR;
 
 namespace Core.BusinessLogic.CommandRequests
 {
-    public class MakeTaxiOrderCommandRequest : IRequest<IOutcome>
+    public class MakeOrderCommandRequest : IRequest<IOutcome>
     {
         public string Phone { get; set; }
         public string From { get; set; }
@@ -13,9 +13,9 @@ namespace Core.BusinessLogic.CommandRequests
         public string Comments { get; set; }
         public DateTime When { get; set; }
 
-        public static MakeTaxiOrderCommandRequest Create(MakeOrderModel model)
+        public static MakeOrderCommandRequest Create(MakeOrderModel model)
         {
-            return new MakeTaxiOrderCommandRequest()
+            return new MakeOrderCommandRequest()
             {
                 From = model.From,
                 To = model.To,

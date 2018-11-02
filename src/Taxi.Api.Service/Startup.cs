@@ -54,7 +54,7 @@ namespace Taxi.Api.Service
                 return appSettingsOptions.Value;
             });
 
-            services.AddMediatR(typeof(MakeTaxiOrderCommandRequest).GetTypeInfo().Assembly);
+            services.AddMediatR(typeof(MakeOrderCommandRequest).GetTypeInfo().Assembly);
 
             services.AddMvc(options =>
             {
@@ -64,7 +64,7 @@ namespace Taxi.Api.Service
 
             services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new Info {Title = "Taxi API", Version = "v1"}); });
 
-            services.AddMediatR(typeof(MakeTaxiOrderCommandRequest));
+            services.AddMediatR(typeof(MakeOrderCommandRequest));
 
             services.AddDbContext<OrderContext>(options => options.UseSqlite($"Data Source={_env.ContentRootPath}/data.db"));
 

@@ -19,7 +19,7 @@ using Microsoft.Extensions.Options;
 
 namespace Core.BusinessLogic.CommandHandlers
 {
-    public class MakeTaxiOrderCommandHandler : IRequestHandler<MakeTaxiOrderCommandRequest, IOutcome>
+    public class MakeOrderCommandHandler : IRequestHandler<MakeOrderCommandRequest, IOutcome>
     {
         private readonly ILogger _logger;
         private readonly IDbContextFactory<OrderContext> _dbContextFactory;
@@ -27,8 +27,8 @@ namespace Core.BusinessLogic.CommandHandlers
         private readonly INotifier _notifier;
         private CreateNewOrderCommand.Factory _createNewOrderCommandFactory = new CreateNewOrderCommand.Factory();
 
-        public MakeTaxiOrderCommandHandler(
-            ILogger<MakeTaxiOrderCommandHandler> logger,
+        public MakeOrderCommandHandler(
+            ILogger<MakeOrderCommandHandler> logger,
             AppSettings appSettings,
             IDbContextFactory<OrderContext> dbContextFactory,
             INotifier notifier)
@@ -49,7 +49,7 @@ namespace Core.BusinessLogic.CommandHandlers
 
         #endregion
 
-        public Task<IOutcome> Handle(MakeTaxiOrderCommandRequest request, CancellationToken cancellationToken)
+        public Task<IOutcome> Handle(MakeOrderCommandRequest request, CancellationToken cancellationToken)
         {
             return Task.Run(() =>
             {
@@ -82,7 +82,7 @@ namespace Core.BusinessLogic.CommandHandlers
             }, cancellationToken);
         }
 
-        private IOutcome<Order> CreateNewOrder(MakeTaxiOrderCommandRequest request)
+        private IOutcome<Order> CreateNewOrder(MakeOrderCommandRequest request)
         {
             using (var dbContext = _dbContextFactory.Create(_appSettings.ConnectionStrings.OrdersDb))
             {

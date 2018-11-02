@@ -31,16 +31,16 @@ namespace Core.BusinessLogic.Tests.CommandHandlers
     {
         private readonly Faker _faker = new Faker();
 
-        private MakeTaxiOrderCommandHandler CreateTestedComponent(
+        private MakeOrderCommandHandler CreateTestedComponent(
             AppSettings appSettings,
             IDbContextFactory<OrderContext> dbContextFactory,
             INotifier notifier)
         {
-            var logger = Substitute.For<ILogger<MakeTaxiOrderCommandHandler>>();
-            return new MakeTaxiOrderCommandHandler(logger, appSettings, dbContextFactory, notifier);
+            var logger = Substitute.For<ILogger<MakeOrderCommandHandler>>();
+            return new MakeOrderCommandHandler(logger, appSettings, dbContextFactory, notifier);
         }
 
-        private MakeTaxiOrderCommandRequest GenerateCommandRequest()
+        private MakeOrderCommandRequest GenerateCommandRequest()
         {
             var myCustomPhone = "123-456-789";
             // 1 способ:
@@ -48,7 +48,7 @@ namespace Core.BusinessLogic.Tests.CommandHandlers
             //apiModel.Phone = myCustomPhone;
             // 2 способ - Fluent API:
             var apiModel = MakeOrderModelFake.Generate().WithPhone(myCustomPhone);
-            return MakeTaxiOrderCommandRequest.Create(apiModel);
+            return MakeOrderCommandRequest.Create(apiModel);
         }
 
         [Fact]
