@@ -35,7 +35,6 @@ namespace Core.BusinessLogic.CommandHandlers
             {
                 using (var dbContext = _dbContextFactory.Create(_appSettings.ConnectionStrings.OrdersDb))
                 {
-
                     try
                     {
                         var foundOrder = dbContext.Orders.FirstOrDefault(e => e.Id == request.OrderId);
