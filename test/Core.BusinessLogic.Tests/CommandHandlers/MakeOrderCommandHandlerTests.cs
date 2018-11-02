@@ -27,7 +27,7 @@ namespace Core.BusinessLogic.Tests.CommandHandlers
 {
     [ExcludeFromCodeCoverage]
     [Trait("Category", "Unit")]
-    public class MakeTaxiOrderCommandHandlerTests
+    public class MakeOrderCommandHandlerTests
     {
         private readonly Faker _faker = new Faker();
 
