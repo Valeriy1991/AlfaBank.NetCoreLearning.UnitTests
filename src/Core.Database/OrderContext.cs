@@ -15,9 +15,9 @@ namespace Core.Database
 
         }
 
-        public DbSet<Order> Orders { get; set; }
-        public DbSet<Driver> Drivers { get; set; }
-        public DbSet<DriverOrder> DriverOrders { get; set; }
+        public virtual DbSet<Order> Orders { get; set; }
+        public virtual DbSet<Driver> Drivers { get; set; }
+        public virtual DbSet<DriverOrder> DriverOrders { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
