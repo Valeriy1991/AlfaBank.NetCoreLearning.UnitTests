@@ -11,7 +11,7 @@ using Core.Database.Abstract;
 using Core.Database.DbExecutors;
 using Core.Models.Settings;
 using DbConn.DbExecutor.Abstract;
-using DbConn.DbExecutor.Dapper;
+using DbConn.DbExecutor.Dapper.Sqlite;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
