@@ -59,7 +59,7 @@ namespace Taxi.Api.Service.Controllers.v1
         /// <param name="driverId"></param>
         /// <returns></returns>
         [HttpPost("{orderId:int}/set-driver/{driverId:int}")]
-        public async Task<IActionResult> Finish(int orderId, int driverId)
+        public async Task<IActionResult> SetDriver(int orderId, int driverId)
         {
             var makeOrderResult = await _mediator.Send(new SetDriverForOrderCommandRequest()
             {
