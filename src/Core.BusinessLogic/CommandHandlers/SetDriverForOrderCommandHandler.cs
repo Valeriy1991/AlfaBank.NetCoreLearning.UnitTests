@@ -22,7 +22,7 @@ namespace Core.BusinessLogic.CommandHandlers
         private readonly IDbExecutorFactory _dbExecutorFactory;
 
         public SetDriverForOrderCommandHandler(
-            ILogger<MakeOrderCommandHandler> logger,
+            ILogger<SetDriverForOrderCommandHandler> logger,
             AppSettings appSettings,
             IDbExecutorFactory dbExecutorFactory)
         {
@@ -40,7 +40,7 @@ namespace Core.BusinessLogic.CommandHandlers
                     var driver = GetDriver(request.DriverId);
                     if (driver == null)
                     {
-                        throw new NullReferenceException($"Назначаемый водитель (ID = {request.DriverId}) не найден");
+                        throw new NullReferenceException("Назначаемый водитель не найден");
                     }
 
                     SetDriverForOrder(request.OrderId, driver.Id);
@@ -60,7 +60,7 @@ namespace Core.BusinessLogic.CommandHandlers
                     errorBuilder.Append(ex.Message);
 
                     _logger.LogError(errorBuilder.ToString());
-                    return Outcomes.Failure().WithMessage(errorBaseMessage);
+                    return Outcomes.Failure().WithMessage(errorBuilder.ToString());
                 }
             }, cancellationToken);
         }
