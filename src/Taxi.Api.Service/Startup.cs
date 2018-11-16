@@ -107,8 +107,6 @@ namespace Taxi.Api.Service
             });
 
             services.AddMediatR(typeof(MakeOrderCommandRequest).GetTypeInfo().Assembly);
-            //services.AddMediatR(typeof(VacantDriversQueryRequest));
-            //services.AddMediatR(typeof(VacantDriversQueryHandler));
             services.AddTransient<DriverRestService>();
             services.AddTransient<DriverRestServiceUrlBuilder>();
 
