@@ -13,14 +13,14 @@ namespace Core.BusinessLogic.WebServices.UrlBuilders
             _restServiceSettings = restServiceSettings;
         }
 
-        public string GetVacantDriversUrl(DateTime onDateTime)
+        public virtual string GetVacantDriversUrl(DateTime onDateTime)
         {
             var driverApiSettings = _restServiceSettings.DriverApi;
 
             var host = driverApiSettings.Host;
             var version = driverApiSettings.Version;
             var url = $"{host}/{version}/driver/vacant"
-                .SetQueryParams(new {onDateTime = onDateTime});
+                .SetQueryParams(new {onDateTime = onDateTime.ToString("s")});
 
             return url;
         }

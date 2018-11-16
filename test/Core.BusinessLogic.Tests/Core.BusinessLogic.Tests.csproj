@@ -19,6 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Core.BusinessLogic\Core.BusinessLogic.csproj" />
     <ProjectReference Include="..\..\src\Core.Database\Core.Database.csproj" />
+    <ProjectReference Include="..\..\src\Core.Models.Fake\Core.Models.Fake.csproj" />
     <ProjectReference Include="..\..\src\Core.Models\Core.Models.csproj" />
   </ItemGroup>
 
