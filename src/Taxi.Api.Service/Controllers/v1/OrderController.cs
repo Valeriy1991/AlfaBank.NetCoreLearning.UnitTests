@@ -45,11 +45,11 @@ namespace Taxi.Api.Service.Controllers.v1
         [HttpPost("finish/{orderId:int}")]
         public async Task<IActionResult> Finish(int orderId)
         {
-            var makeOrderResult = await _mediator.Send(new FinishOrderCommandRequest()
+            var finishOrderResult = await _mediator.Send(new FinishOrderCommandRequest()
             {
                 OrderId = orderId
             });
-            return Ok(makeOrderResult);
+            return Ok(finishOrderResult);
         }
 
         /// <summary>
@@ -61,12 +61,12 @@ namespace Taxi.Api.Service.Controllers.v1
         [HttpPost("{orderId:int}/set-driver/{driverId:int}")]
         public async Task<IActionResult> SetDriver(int orderId, int driverId)
         {
-            var makeOrderResult = await _mediator.Send(new SetDriverForOrderCommandRequest()
+            var setDriverForOrderResult = await _mediator.Send(new SetDriverForOrderCommandRequest()
             {
                 OrderId = orderId,
                 DriverId = driverId
             });
-            return Ok(makeOrderResult);
+            return Ok(setDriverForOrderResult);
         }
 
 
