@@ -14,13 +14,13 @@ using Microsoft.Extensions.Logging;
 
 namespace Core.BusinessLogic.CommandHandlers
 {
-    public class FinishOrderCommandHandler : IRequestHandler<FinishOrderCommandRequest, IOutcome>
+    public class FinishOrderCommandHandlerV2 : IRequestHandler<FinishOrderCommandRequestV2, IOutcome>
     {
         private readonly ILogger _logger;
         private readonly IDbContextFactory<OrderContext> _dbContextFactory;
         private readonly AppSettings _appSettings;
 
-        public FinishOrderCommandHandler(ILogger<FinishOrderCommandHandler> logger,
+        public FinishOrderCommandHandlerV2(ILogger<FinishOrderCommandHandlerV2> logger,
             AppSettings appSettings,
             IDbContextFactory<OrderContext> dbContextFactory)
         {
@@ -29,7 +29,7 @@ namespace Core.BusinessLogic.CommandHandlers
             _dbContextFactory = dbContextFactory;
         }
 
-        public Task<IOutcome> Handle(FinishOrderCommandRequest request, CancellationToken cancellationToken)
+        public Task<IOutcome> Handle(FinishOrderCommandRequestV2 request, CancellationToken cancellationToken)
         {
             return Task.Run(() =>
             {
@@ -44,7 +44,7 @@ namespace Core.BusinessLogic.CommandHandlers
                         }
 
                         foundOrder.Status = StatusEnum.Finished;
-                        foundOrder.FinishDateTime = DateTime.Now;
+                        foundOrder.FinishDateTime = request.FinishDateTime;
 
                         dbContext.SaveChanges();
 
