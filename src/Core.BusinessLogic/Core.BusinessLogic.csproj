@@ -5,13 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DbConn.DbExecutor.Abstract" Version="1.0.2-alpha11" />
     <PackageReference Include="Ether.Outcomes" Version="2.9.5" />
+    <PackageReference Include="Flurl" Version="2.8.0" />
+    <PackageReference Include="Flurl.Http" Version="2.4.0" />
     <PackageReference Include="MediatR" Version="5.1.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="QueryHandlers\" />
-    <Folder Include="Queries\" />
   </ItemGroup>
 
   <ItemGroup>

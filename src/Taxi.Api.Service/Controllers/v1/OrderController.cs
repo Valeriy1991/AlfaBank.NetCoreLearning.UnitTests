@@ -45,11 +45,30 @@ namespace Taxi.Api.Service.Controllers.v1
         [HttpPost("finish/{orderId:int}")]
         public async Task<IActionResult> Finish(int orderId)
         {
-            var makeOrderResult = await _mediator.Send(new FinishOrderCommandRequest()
+            var finishOrderResult = await _mediator.Send(new FinishOrderCommandRequest()
             {
                 OrderId = orderId
             });
-            return Ok(makeOrderResult);
+            return Ok(finishOrderResult);
         }
+
+        /// <summary>
+        /// Назначить водителя на заказ
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <param name="driverId"></param>
+        /// <returns></returns>
+        [HttpPost("{orderId:int}/set-driver/{driverId:int}")]
+        public async Task<IActionResult> SetDriver(int orderId, int driverId)
+        {
+            var setDriverForOrderResult = await _mediator.Send(new SetDriverForOrderCommandRequest()
+            {
+                OrderId = orderId,
+                DriverId = driverId
+            });
+            return Ok(setDriverForOrderResult);
+        }
+
+
     }
 }
