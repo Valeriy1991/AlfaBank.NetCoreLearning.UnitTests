@@ -23,16 +23,16 @@ namespace Core.BusinessLogic.Tests.CommandHandlers
 {
     [ExcludeFromCodeCoverage]
     [Trait("Category", "Unit")]
-    public class FinishOrderCommandHandlerTests
+    public class FinishOrderCommandHandlerV2Tests
     {
         private readonly Faker _faker = new Faker();
 
-        private FinishOrderCommandHandler CreateTestedComponent(
+        private FinishOrderCommandHandlerV2 CreateTestedComponent(
             AppSettings appSettings,
             IDbContextFactory<OrderContext> dbContextFactory)
         {
-            var logger = Substitute.For<ILogger<FinishOrderCommandHandler>>();
-            return new FinishOrderCommandHandler(logger, appSettings, dbContextFactory);
+            var logger = Substitute.For<ILogger<FinishOrderCommandHandlerV2>>();
+            return new FinishOrderCommandHandlerV2(logger, appSettings, dbContextFactory);
         }
 
         [Fact]
@@ -70,7 +70,7 @@ namespace Core.BusinessLogic.Tests.CommandHandlers
             #endregion
 
             var handler = CreateTestedComponent(appSettings, dbContextFactory);
-            var commandRequest = new FinishOrderCommandRequest()
+            var commandRequest = new FinishOrderCommandRequestV2()
             {
                 OrderId = orderId
             };
@@ -85,6 +85,7 @@ namespace Core.BusinessLogic.Tests.CommandHandlers
         {
             // Arrange
             var orderId = _faker.Random.Int(min: 0);
+            var finishDateTime = _faker.Date.Recent();
             var order = new Order() {Id = orderId, FinishDateTime = null, Status = ""};
             var orders = new List<Order>()
             {
@@ -115,14 +116,15 @@ namespace Core.BusinessLogic.Tests.CommandHandlers
             #endregion
 
             var handler = CreateTestedComponent(appSettings, dbContextFactory);
-            var commandRequest = new FinishOrderCommandRequest()
+            var commandRequest = new FinishOrderCommandRequestV2()
             {
-                OrderId = orderId
+                OrderId = orderId,
+                FinishDateTime = finishDateTime
             };
             // Act
             await handler.Handle(commandRequest, CancellationToken.None);
             // Assert
-            Assert.NotEqual(default(DateTime), order.FinishDateTime);
+            Assert.Equal(finishDateTime, order.FinishDateTime);
             Assert.Equal(StatusEnum.Finished, order.Status);
         }
     }
