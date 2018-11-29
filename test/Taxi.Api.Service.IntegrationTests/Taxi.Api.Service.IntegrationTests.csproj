@@ -21,4 +21,10 @@
     <ProjectReference Include="..\..\src\Taxi.Api.Service\Taxi.Api.Service.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="orders.db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
