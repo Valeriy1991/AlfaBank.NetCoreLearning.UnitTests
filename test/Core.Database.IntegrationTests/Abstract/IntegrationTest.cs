@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Core.Database.DbExecutors;
 using Core.Models.Settings;
+using DbConn.DbExecutor.Abstract;
+using DbConn.DbExecutor.Dapper.Sqlite;
 
 namespace Core.Database.IntegrationTests.Abstract
 {
@@ -8,6 +10,9 @@ namespace Core.Database.IntegrationTests.Abstract
     public abstract class IntegrationTest
     {
         public AppSettings AppSettings { get; set; }
+
+        private readonly OrdersDbContextFactory _ordersDbContextFactory = new OrdersDbContextFactory();
+        private readonly IDbExecutorFactory _dbExecutorFactory = new DapperDbExecutorFactory();
 
         protected IntegrationTest()
         {
@@ -22,15 +27,18 @@ namespace Core.Database.IntegrationTests.Abstract
 
         protected OrderContext CreateDbContext()
         {
-            var orderDbContextFactory = new OrdersDbContextFactory();
-            return orderDbContextFactory.Create(AppSettings.ConnectionStrings.OrdersDb);
+            return _ordersDbContextFactory.Create(AppSettings.ConnectionStrings.OrdersDb);
         }
         protected OrderContext CreateTransactionalDbContext()
         {
-            var orderDbContextFactory = new OrdersDbContextFactory();
-            var dbContext = orderDbContextFactory.Create(AppSettings.ConnectionStrings.OrdersDb);
+            var dbContext = _ordersDbContextFactory.Create(AppSettings.ConnectionStrings.OrdersDb);
             dbContext.Database.BeginTransaction();
             return dbContext;
+        }
+
+        protected IDbExecutor CreateDbExecutor()
+        {
+            return _dbExecutorFactory.Create(AppSettings.ConnectionStrings.OrdersDb);
         }
     }
 }
