@@ -20,7 +20,7 @@ namespace Core.Models.Tests.Json
             // Assert
             dynamic json = JObject.Parse(jsonString);
             Assert.Equal(model.Id, (int)json["id"]);
-            Assert.Equal(model.FullName, (string)json["name"]);
+            Assert.Equal(model.FullName, (string)json["fullNamename"]);
             Assert.Equal(model.Phone, (string)json["phone"]);
         }
     }
