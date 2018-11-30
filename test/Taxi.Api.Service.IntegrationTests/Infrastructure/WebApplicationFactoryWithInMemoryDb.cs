@@ -1,5 +1,6 @@
 ﻿using System;
 using Core.Database;
+using Core.Database.Abstract;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +28,8 @@ namespace Taxi.Api.Service.IntegrationTests.Infrastructure
                     options.UseInMemoryDatabase("InMemoryDbForTesting");
                     options.UseInternalServiceProvider(serviceProvider);
                 });
+
+                services.AddTransient<IDbContextFactory<OrderContext>, OrdersDbContextTestFactory>();
 
                 // Build the service provider.
                 var anotherServiceProvider = services.BuildServiceProvider();
