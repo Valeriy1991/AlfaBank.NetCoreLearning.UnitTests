@@ -118,7 +118,7 @@ namespace Taxi.Api.Service
 
             services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new Info {Title = "Taxi API", Version = "v1"}); });
             services.AddDbContext<OrderContext>(options =>
-                options.UseSqlite($"Data Source={_env.ContentRootPath}/data.db"));
+                options.UseSqlite($"Data Source=D:/Projects/Learn/NetCore/orders.db"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
