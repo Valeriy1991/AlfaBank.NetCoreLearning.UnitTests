@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Core.Models;
 using Dapper;
 using DbConn.DbExecutor.Abstract;
@@ -11,11 +12,11 @@ namespace Core.Database.TestsRepository
         {
             var insertDriverSql = $@"
 insert into Drivers(FullName, Phone)
-values ('{driver.FullName}', '{driver.Phone}');
+values (""{driver.FullName}"", ""{driver.Phone}"");
 
 select last_insert_rowid();
 ";
-            var driverId = dbExecutor.InnerConnection.Execute(insertDriverSql);
+            var driverId = dbExecutor.Query<int>(insertDriverSql).First();
             return driverId;
         }
     }

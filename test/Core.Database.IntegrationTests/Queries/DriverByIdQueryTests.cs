@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Bogus;
 using Core.Database.IntegrationTests.Abstract;
 using Core.Database.Queries;
@@ -47,11 +48,11 @@ namespace Core.Database.IntegrationTests.Queries
                 var driver = DriverFake.Generate();
                 var insertDriverSql = $@"
 insert into Drivers(FullName, Phone)
-values ('{driver.FullName}', '{driver.Phone}');
+values (""{driver.FullName}"", ""{driver.Phone}"");
 
 select last_insert_rowid();
 ";
-                var driverId = dbExecutor.InnerConnection.Execute(insertDriverSql);
+                var driverId = dbExecutor.Query<int>(insertDriverSql).First();
                 var query = CreateTestedComponent(dbExecutor);
                 // Act
                 var foundDriver = query.Get(driverId);
