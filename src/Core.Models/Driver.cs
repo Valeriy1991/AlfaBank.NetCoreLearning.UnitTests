@@ -20,5 +20,7 @@ namespace Core.Models
         [DataMember(Name = "orders")]
         [NotMapped]
         public ICollection<Order> Orders { get; set; }
+
+        [IgnoreDataMember] public string SomeIgnoredProperty { get; set; } = "some-ignored-value";
     }
 }

@@ -39,5 +39,18 @@ namespace Core.Models.Tests.Json
             Assert.Equal(driver.Orders.Count, orders.Count);
             Assert.DoesNotContain(orders, e => e == null);
         }
+
+        [Fact]
+        public void ToJson__IgnoredPropertiesIsNull()
+        {
+            // Arrange
+            var model = DriverFake.Generate();
+            // Act
+            var jsonString = JsonConvert.SerializeObject(model);
+            // Assert
+            dynamic json = JObject.Parse(jsonString);
+            Assert.Null(json["SomeIgnoredProperty"]);
+            Assert.Null(json["someIgnoredProperty"]);
+        }
     }
 }
