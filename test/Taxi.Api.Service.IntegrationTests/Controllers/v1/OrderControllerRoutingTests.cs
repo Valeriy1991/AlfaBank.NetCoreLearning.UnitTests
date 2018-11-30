@@ -42,9 +42,5 @@ namespace Taxi.Api.Service.IntegrationTests.Controllers.v1
             response.EnsureSuccessStatusCode();
             Assert.Contains("\"success\":true", makeOrderResultAsJson);
         }
-        protected StringContent CreateHttpContent(string json)
-        {
-            return new StringContent(json, Encoding.UTF8, "application/json");
-        }
     }
 }
