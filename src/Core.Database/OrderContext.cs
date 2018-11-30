@@ -21,7 +21,6 @@ namespace Core.Database
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data source=orders.db");
         }
     }
 }
