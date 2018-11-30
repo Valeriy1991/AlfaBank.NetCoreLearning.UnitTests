@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Core.Database;
 using Core.Database.Abstract;
@@ -11,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using NSubstitute;
 using Taxi.Api.Service.Controllers.v1;
+using Taxi.Api.Service.IntegrationTests.Infrastructure;
 using Xunit;
 
 namespace Taxi.Api.Service.IntegrationTests.Controllers.v1
@@ -19,7 +22,7 @@ namespace Taxi.Api.Service.IntegrationTests.Controllers.v1
     [Trait("Category", "Integration - Routing")]
     public class OrderControllerRoutingTests : RoutingTest
     {
-        public OrderControllerRoutingTests(WebApplicationFactory<Startup> factory) : base(factory)
+        public OrderControllerRoutingTests(WebApplicationFactoryWithInMemoryDb<Startup> factory) : base(factory)
         {
         }
 
@@ -38,6 +41,10 @@ namespace Taxi.Api.Service.IntegrationTests.Controllers.v1
             // Assert
             response.EnsureSuccessStatusCode();
             Assert.Contains("\"success\":true", makeOrderResultAsJson);
+        }
+        protected StringContent CreateHttpContent(string json)
+        {
+            return new StringContent(json, Encoding.UTF8, "application/json");
         }
     }
 }

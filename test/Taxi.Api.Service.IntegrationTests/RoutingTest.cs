@@ -5,16 +5,17 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Newtonsoft.Json;
+using Taxi.Api.Service.IntegrationTests.Infrastructure;
 using Xunit;
 
 namespace Taxi.Api.Service.IntegrationTests
 {
     [ExcludeFromCodeCoverage]
-    public abstract class RoutingTest : IClassFixture<WebApplicationFactory<Startup>>
+    public abstract class RoutingTest : IClassFixture<WebApplicationFactoryWithInMemoryDb<Startup>>
     {
-        protected WebApplicationFactory<Startup> WebApplicationFactory { get; }
+        protected WebApplicationFactoryWithInMemoryDb<Startup> WebApplicationFactory { get; }
 
-        protected RoutingTest(WebApplicationFactory<Startup> factory)
+        protected RoutingTest(WebApplicationFactoryWithInMemoryDb<Startup> factory)
         {
             WebApplicationFactory = factory;
         }

@@ -2,7 +2,6 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Taxi.Api.Service.IntegrationTests.Infrastructure;
 using Xunit;
 
 namespace Taxi.Api.Service.IntegrationTests
