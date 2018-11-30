@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using Bogus;
 using Core.Database.IntegrationTests.Abstract;
 using Core.Database.Queries;
+using Core.Database.TestsRepository;
 using Core.Models.Fake;
 using Dapper;
 using DbConn.DbExecutor.Abstract;
@@ -15,6 +16,7 @@ namespace Core.Database.IntegrationTests.Queries
     public class DriverByIdQueryTests : IntegrationTest
     {
         private readonly Faker _faker = new Faker();
+        private readonly DriverTestRepository _driverTestRepository = new DriverTestRepository();
 
         private DriverByIdQuery CreateTestedComponent(IDbExecutor dbExecutor)
         {
@@ -37,24 +39,44 @@ namespace Core.Database.IntegrationTests.Queries
         }
 
         [Fact]
-        public void Get__DriverExistsInStorage__ReturnThisDriver()
+        public void Get__DriverExistsInStorage__ReturnThisDriver_V1()
         {
             using (var dbExecutor = CreateDbExecutor())
             {
                 // Arrange
-                var driverFake = DriverFake.Generate();
+                var driver = DriverFake.Generate();
                 var insertDriverSql = $@"
 insert into Drivers(FullName, Phone)
-values ('{driverFake.FullName}', '{driverFake.Phone}');
+values ('{driver.FullName}', '{driver.Phone}');
 
 select last_insert_rowid();
 ";
                 var driverId = dbExecutor.InnerConnection.Execute(insertDriverSql);
                 var query = CreateTestedComponent(dbExecutor);
                 // Act
-                var driver = query.Get(driverId);
+                var foundDriver = query.Get(driverId);
                 // Assert
-                Assert.NotNull(driver);
+                Assert.NotNull(foundDriver);
+                Assert.Equal(driver.Phone, foundDriver.Phone);
+                Assert.Equal(driver.FullName, foundDriver.FullName);
+            }
+        }
+
+        [Fact]
+        public void Get__DriverExistsInStorage__ReturnThisDriver_V2()
+        {
+            using (var dbExecutor = CreateDbExecutor())
+            {
+                // Arrange
+                var driver = DriverFake.Generate();
+                var driverId = _driverTestRepository.Create(dbExecutor, driver);
+                var query = CreateTestedComponent(dbExecutor);
+                // Act
+                var foundDriver = query.Get(driverId);
+                // Assert
+                Assert.NotNull(foundDriver);
+                Assert.Equal(driver.Phone, foundDriver.Phone);
+                Assert.Equal(driver.FullName, foundDriver.FullName);
             }
         }
     }
