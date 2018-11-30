@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace Core.Models.Tests.Json.Abstract
 {
@@ -8,8 +9,13 @@ namespace Core.Models.Tests.Json.Abstract
     {
         public string SerializeObjectToJson(object model)
         {
+            var contractResolver = new DefaultContractResolver()
+            {
+                NamingStrategy = new CamelCaseNamingStrategy()
+            };
             return JsonConvert.SerializeObject(model, new JsonSerializerSettings()
             {
+                ContractResolver = contractResolver,
                 Formatting = Formatting.Indented
             });
         }
