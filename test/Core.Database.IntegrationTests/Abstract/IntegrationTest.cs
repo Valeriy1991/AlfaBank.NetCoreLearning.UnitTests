@@ -40,5 +40,9 @@ namespace Core.Database.IntegrationTests.Abstract
         {
             return _dbExecutorFactory.Create(AppSettings.ConnectionStrings.OrdersDb);
         }
+        protected IDbExecutor CreateTransactionalDbExecutor()
+        {
+            return _dbExecutorFactory.CreateTransactional(AppSettings.ConnectionStrings.OrdersDb);
+        }
     }
 }

@@ -27,6 +27,7 @@ namespace Core.Database.IntegrationTests.Queries
         [Fact]
         public void Get__DriverDoesNotExistInStorage__ReturnNull()
         {
+            // Т.к. мы только читаем данные из БД, то не используем транзакционность
             using (var dbExecutor = CreateDbExecutor())
             {
                 // Arrange
@@ -42,7 +43,7 @@ namespace Core.Database.IntegrationTests.Queries
         [Fact]
         public void Get__DriverExistsInStorage__ReturnThisDriver_V1()
         {
-            using (var dbExecutor = CreateDbExecutor())
+            using (var dbExecutor = CreateTransactionalDbExecutor())
             {
                 // Arrange
                 var driver = DriverFake.Generate();
@@ -66,7 +67,7 @@ select last_insert_rowid();
         [Fact]
         public void Get__DriverExistsInStorage__ReturnThisDriver_V2()
         {
-            using (var dbExecutor = CreateDbExecutor())
+            using (var dbExecutor = CreateTransactionalDbExecutor())
             {
                 // Arrange
                 var driver = DriverFake.Generate();
