@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Core.BusinessLogic.CommandRequests;
 using Core.Database;
 using Core.Database.Abstract;
+using Core.Database.Queries;
 using Core.Models;
 using Core.Models.Settings;
 using DbConn.DbExecutor.Abstract;
@@ -21,6 +22,8 @@ namespace Core.BusinessLogic.CommandHandlers
         private readonly AppSettings _appSettings;
         private readonly IDbExecutorFactory _dbExecutorFactory;
 
+        private DriverByIdQuery.Factory _driverByIdQueryFactory;
+
         public SetDriverForOrderCommandHandler(
             ILogger<SetDriverForOrderCommandHandler> logger,
             AppSettings appSettings,
@@ -29,7 +32,18 @@ namespace Core.BusinessLogic.CommandHandlers
             _logger = logger;
             _appSettings = appSettings;
             _dbExecutorFactory = dbExecutorFactory;
+
+            _driverByIdQueryFactory = new DriverByIdQuery.Factory();
         }
+
+        #region For tests
+
+        internal void SetDriverByIdQueryFactory(DriverByIdQuery.Factory factory)
+        {
+            _driverByIdQueryFactory = factory;
+        }
+
+        #endregion
 
         public Task<IOutcome> Handle(SetDriverForOrderCommandRequest request, CancellationToken cancellationToken)
         {
@@ -81,12 +95,8 @@ values ({driverId}, {orderId});
         {
             using (var dbExecutor = _dbExecutorFactory.Create(_appSettings.ConnectionStrings.OrdersDb))
             {
-                var sql = $@"
-select * 
-from Drivers
-where Id = {driverId};
-";
-                return dbExecutor.Query<Driver>(sql).FirstOrDefault();
+                var query = _driverByIdQueryFactory.Create(dbExecutor);
+                return query.Get(driverId);
             }
         }
     }
