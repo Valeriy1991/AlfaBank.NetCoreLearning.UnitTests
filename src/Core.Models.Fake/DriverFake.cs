@@ -13,7 +13,7 @@ namespace Core.Models.Fake
         private static readonly Faker<Driver> Faker =
                 new Faker<Driver>()
                     .RuleFor(e => e.Id, f => f.Random.Int(min: 0))
-                    .RuleFor(e => e.FullName, f => f.Address.FullAddress())
+                    .RuleFor(e => e.FullName, f => f.Person.FullName)
                     .RuleFor(e => e.Phone, f => f.Phone.PhoneNumber("+7-9##-###-##-##"))
             ;
 
