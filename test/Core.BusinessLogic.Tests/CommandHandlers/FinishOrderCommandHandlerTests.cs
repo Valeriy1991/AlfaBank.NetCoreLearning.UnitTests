@@ -35,15 +35,17 @@ namespace Core.BusinessLogic.Tests.CommandHandlers
             return new FinishOrderCommandHandler(logger, appSettings, dbContextFactory);
         }
 
-        [Fact]
-        public async Task Handle__ReturnSuccess()
+        private readonly FinishOrderCommandHandler _handler;
+        private readonly FinishOrderCommandRequest _commandRequest;
+        private readonly Order _order;
+
+        public FinishOrderCommandHandlerTests()
         {
-            // Arrange
             var orderId = _faker.Random.Int(min: 0);
-            var order = new Order() { Id = orderId, FinishDateTime = null, Status = "" };
+            _order = new Order() { Id = orderId, FinishDateTime = null, Status = "" };
             var orders = new List<Order>()
             {
-                order
+                _order
             };
             var ordersAsQueryable = orders.AsQueryable();
             var dbContext = Substitute.For<OrderContext>();
@@ -52,10 +54,10 @@ namespace Core.BusinessLogic.Tests.CommandHandlers
             #region DbContext
 
             var ordersDbSet = Substitute.For<DbSet<Order>, IQueryable<Order>>();
-            ((IQueryable<Order>) ordersDbSet).Provider.Returns(ordersAsQueryable.Provider);
-            ((IQueryable<Order>) ordersDbSet).Expression.Returns(ordersAsQueryable.Expression);
-            ((IQueryable<Order>) ordersDbSet).ElementType.Returns(ordersAsQueryable.ElementType);
-            ((IQueryable<Order>) ordersDbSet).GetEnumerator().Returns(ordersAsQueryable.GetEnumerator());
+            ((IQueryable<Order>)ordersDbSet).Provider.Returns(ordersAsQueryable.Provider);
+            ((IQueryable<Order>)ordersDbSet).Expression.Returns(ordersAsQueryable.Expression);
+            ((IQueryable<Order>)ordersDbSet).ElementType.Returns(ordersAsQueryable.ElementType);
+            ((IQueryable<Order>)ordersDbSet).GetEnumerator().Returns(ordersAsQueryable.GetEnumerator());
 
             dbContext.Orders.Returns(ordersDbSet);
             dbContext.SaveChanges().Returns(1);
@@ -69,13 +71,19 @@ namespace Core.BusinessLogic.Tests.CommandHandlers
 
             #endregion
 
-            var handler = CreateTestedComponent(appSettings, dbContextFactory);
-            var commandRequest = new FinishOrderCommandRequest()
+            _handler = CreateTestedComponent(appSettings, dbContextFactory);
+            _commandRequest = new FinishOrderCommandRequest()
             {
                 OrderId = orderId
             };
+        }
+
+        [Fact]
+        public async Task Handle__ReturnSuccess()
+        {
+            // Arrange
             // Act
-            var result = await handler.Handle(commandRequest, CancellationToken.None);
+            var result = await _handler.Handle(_commandRequest, CancellationToken.None);
             // Assert
             Assert.True(result.Success);
         }
@@ -84,46 +92,11 @@ namespace Core.BusinessLogic.Tests.CommandHandlers
         public async Task Handle__OrderHasValidFinishDateTimeAndStatusEqualsFinish()
         {
             // Arrange
-            var orderId = _faker.Random.Int(min: 0);
-            var order = new Order() {Id = orderId, FinishDateTime = null, Status = ""};
-            var orders = new List<Order>()
-            {
-                order
-            };
-            var ordersAsQueryable = orders.AsQueryable();
-            var dbContext = Substitute.For<OrderContext>();
-            var appSettings = AppSettingsFake.Generate();
-
-            #region DbContext
-
-            var ordersDbSet = Substitute.For<DbSet<Order>, IQueryable<Order>>();
-            ((IQueryable<Order>) ordersDbSet).Provider.Returns(ordersAsQueryable.Provider);
-            ((IQueryable<Order>) ordersDbSet).Expression.Returns(ordersAsQueryable.Expression);
-            ((IQueryable<Order>) ordersDbSet).ElementType.Returns(ordersAsQueryable.ElementType);
-            ((IQueryable<Order>) ordersDbSet).GetEnumerator().Returns(ordersAsQueryable.GetEnumerator());
-
-            dbContext.Orders.Returns(ordersDbSet);
-            dbContext.SaveChanges().Returns(1);
-
-            #endregion
-
-            #region DbContextFactory
-
-            var dbContextFactory = Substitute.For<IDbContextFactory<OrderContext>>();
-            dbContextFactory.Create(appSettings.ConnectionStrings.OrdersDb).Returns(dbContext);
-
-            #endregion
-
-            var handler = CreateTestedComponent(appSettings, dbContextFactory);
-            var commandRequest = new FinishOrderCommandRequest()
-            {
-                OrderId = orderId
-            };
             // Act
-            await handler.Handle(commandRequest, CancellationToken.None);
+            await _handler.Handle(_commandRequest, CancellationToken.None);
             // Assert
-            Assert.NotEqual(default(DateTime), order.FinishDateTime);
-            Assert.Equal(StatusEnum.Finished, order.Status);
+            Assert.NotEqual(default(DateTime), _order.FinishDateTime);
+            Assert.Equal(StatusEnum.Finished, _order.Status);
         }
     }
 }
