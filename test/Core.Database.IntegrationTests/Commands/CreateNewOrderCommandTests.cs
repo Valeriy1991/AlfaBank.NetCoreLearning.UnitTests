@@ -22,6 +22,19 @@ namespace Core.Database.IntegrationTests.Commands
             return new CreateNewOrderCommand(dbContext);
         }
 
+        private readonly CreateNewOrderCommand.Context _commandContext;
+
+        public CreateNewOrderCommandTests()
+        {
+            _commandContext = new CreateNewOrderCommand.Context()
+            {
+                Phone = _faker.Phone.PhoneNumber("+7 ### ###-##-##"),
+                From = _faker.Address.FullAddress(),
+                To = _faker.Address.FullAddress(),
+                When = _faker.Date.Soon()
+            };
+        }
+
         [Fact]
         public void Execute__ReturnSuccess()
         {
@@ -29,15 +42,8 @@ namespace Core.Database.IntegrationTests.Commands
             {
                 // Arrange
                 var command = CreateTestedComponent(dbContext);
-                var context = new CreateNewOrderCommand.Context()
-                {
-                    Phone = _faker.Phone.PhoneNumber("+7 ### ###-##-##"),
-                    From = _faker.Address.FullAddress(),
-                    To = _faker.Address.FullAddress(),
-                    When = _faker.Date.Soon()
-                };
                 // Act
-                var result = command.Execute(context);
+                var result = command.Execute(_commandContext);
                 // Assert
                 Assert.True(result.Success);
             }
@@ -50,15 +56,8 @@ namespace Core.Database.IntegrationTests.Commands
             {
                 // Arrange
                 var command = CreateTestedComponent(dbContext);
-                var context = new CreateNewOrderCommand.Context()
-                {
-                    Phone = _faker.Phone.PhoneNumber("+7 ### ###-##-##"),
-                    From = _faker.Address.FullAddress(),
-                    To = _faker.Address.FullAddress(),
-                    When = _faker.Date.Soon()
-                };
                 // Act
-                var result = command.Execute(context);
+                var result = command.Execute(_commandContext);
                 // Assert
                 var insertedId = result.Value.Id;
                 var insertedOrder = dbContext.Orders.FirstOrDefault(e => e.Id == insertedId);
@@ -73,15 +72,8 @@ namespace Core.Database.IntegrationTests.Commands
             {
                 // Arrange
                 var command = CreateTestedComponent(dbContext);
-                var context = new CreateNewOrderCommand.Context()
-                {
-                    Phone = _faker.Phone.PhoneNumber("+7 ### ###-##-##"),
-                    From = _faker.Address.FullAddress(),
-                    To = _faker.Address.FullAddress(),
-                    When = _faker.Date.Soon()
-                };
                 // Act
-                var result = command.Execute(context);
+                var result = command.Execute(_commandContext);
                 // Assert
                 var insertedId = result.Value.Id;
                 var insertedOrder = dbContext.Orders.FirstOrDefault(e => e.Id == insertedId);
