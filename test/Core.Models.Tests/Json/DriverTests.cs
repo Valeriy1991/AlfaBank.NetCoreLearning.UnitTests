@@ -11,32 +11,55 @@ namespace Core.Models.Tests.Json
     [Trait("Category", "Integration - Json")]
     public class DriverTests
     {
+        private readonly Driver _driver;
+        private readonly string _jsonString;
+
+        public DriverTests()
+        {
+            _driver = DriverFake.Generate();
+            _driver.Orders = OrderFake.Generate(3);
+            _jsonString = JsonConvert.SerializeObject(_driver);
+        }
+
         [Fact]
-        public void ToJson__AllSimplePropertiesIsValid()
+        public void ToJson__IdIsValid()
         {
             // Arrange
-            var model = DriverFake.Generate();
             // Act
-            var jsonString = JsonConvert.SerializeObject(model);
+            dynamic json = JObject.Parse(_jsonString);
             // Assert
-            dynamic json = JObject.Parse(jsonString);
-            Assert.Equal(model.Id, (int)json["id"]);
-            Assert.Equal(model.FullName, (string)json["fullName"]);
-            Assert.Equal(model.Phone, (string)json["phone"]);
+            Assert.Equal(_driver.Id, (int)json["id"]);
+        }
+
+        [Fact]
+        public void ToJson__FullNameIsValid()
+        {
+            // Arrange
+            // Act
+            dynamic json = JObject.Parse(_jsonString);
+            // Assert
+            Assert.Equal(_driver.FullName, (string)json["fullName"]);
+        }
+
+        [Fact]
+        public void ToJson__PhoneIsValid()
+        {
+            // Arrange
+            // Act
+            dynamic json = JObject.Parse(_jsonString);
+            // Assert
+            Assert.Equal(_driver.Phone, (string)json["phone"]);
         }
 
         [Fact]
         public void ToJson__OrdersContainsValidItems()
         {
             // Arrange
-            var driver = DriverFake.Generate();
-            driver.Orders = OrderFake.Generate(3);
-            var jsonString = JsonConvert.SerializeObject(driver);
             // Act
-            dynamic json = JObject.Parse(jsonString);
+            dynamic json = JObject.Parse(_jsonString);
             // Assert
             var orders = (List<Order>)json["orders"].ToObject<List<Order>>();
-            Assert.Equal(driver.Orders.Count, orders.Count);
+            Assert.Equal(_driver.Orders.Count, orders.Count);
             Assert.DoesNotContain(orders, e => e == null);
         }
 
@@ -44,13 +67,10 @@ namespace Core.Models.Tests.Json
         public void ToJson__IgnoredPropertiesIsNull()
         {
             // Arrange
-            var model = DriverFake.Generate();
             // Act
-            var jsonString = JsonConvert.SerializeObject(model);
+            dynamic json = JObject.Parse(_jsonString);
             // Assert
-            dynamic json = JObject.Parse(jsonString);
             Assert.Null(json["SomeIgnoredProperty"]);
-            Assert.Null(json["someIgnoredProperty"]);
         }
     }
 }

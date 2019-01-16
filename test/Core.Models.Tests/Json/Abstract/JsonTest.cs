@@ -7,7 +7,7 @@ namespace Core.Models.Tests.Json.Abstract
     [ExcludeFromCodeCoverage]
     public abstract class JsonTest
     {
-        public string SerializeObjectToJson(object model)
+        protected string SerializeObjectToJson(object model)
         {
             var contractResolver = new DefaultContractResolver()
             {
