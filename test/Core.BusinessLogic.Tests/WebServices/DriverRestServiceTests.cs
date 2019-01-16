@@ -23,10 +23,26 @@ namespace Core.BusinessLogic.Tests.WebServices
     {
         private readonly Faker _faker = new Faker();
         private readonly HttpTest _httpTest;
+        private DateTime _currentDateTime;
+        private string _url;
+        private DriverRestService _restService;
 
         public DriverRestServiceTests()
         {
             _httpTest = new HttpTest();
+
+            _currentDateTime = _faker.Date.Recent();
+            _url = _faker.Internet.Url();
+
+            #region UrlBuilder
+
+            var restServiceSettings = Substitute.For<RestServiceSettings>();
+            var urlBuilder = Substitute.For<DriverRestServiceUrlBuilder>(restServiceSettings);
+            urlBuilder.GetVacantDriversUrl(Arg.Any<DateTime>()).Returns(_url);
+
+            #endregion
+
+            _restService = CreateTestedComponent(urlBuilder);
         }
 
         private DriverRestService CreateTestedComponent(DriverRestServiceUrlBuilder urlBuilder)
@@ -38,47 +54,22 @@ namespace Core.BusinessLogic.Tests.WebServices
         public void GetVacantDriversAsync__UrlWasCalledAtOnce()
         {
             // Arrange
-            var currentDateTime = _faker.Date.Recent();
-            var url = _faker.Internet.Url();
-
-            #region UrlBuilder
-
-            var restServiceSettings = Substitute.For<RestServiceSettings>();
-            var urlBuilder = Substitute.For<DriverRestServiceUrlBuilder>(restServiceSettings);
-            urlBuilder.GetVacantDriversUrl(Arg.Any<DateTime>()).Returns(url);
-
-            #endregion
-
-            var restService = CreateTestedComponent(urlBuilder);
             // Act
-            restService.GetVacantDriversAsync(currentDateTime);
+            _restService.GetVacantDriversAsync(_currentDateTime);
             // Assert
-            _httpTest.ShouldHaveCalled(url).Times(1);
+            _httpTest.ShouldHaveCalled(_url).Times(1);
         }
 
         [Fact]
-        public async Task GetVacantDriversAsync__UrlWasCalledWithValidVerbAndConcentType()
+        public async Task GetVacantDriversAsync__UrlWasCalledWithValidVerbAndContentType()
         {
             // Arrange
             var drivers = DriverFake.Generate(4);
             _httpTest.RespondWithJson(drivers);
-            var currentDateTime = _faker.Date.Recent();
-            var url = _faker.Internet.Url();
-
-            #region UrlBuilder
-
-            var restServiceSettings = Substitute.For<RestServiceSettings>();
-            var urlBuilder = Substitute.For<DriverRestServiceUrlBuilder>(restServiceSettings);
-            urlBuilder.GetVacantDriversUrl(Arg.Any<DateTime>()).Returns(url);
-
-            #endregion
-
-            var restService = CreateTestedComponent(urlBuilder);
             // Act
-            await restService.GetVacantDriversAsync(currentDateTime);
+            await _restService.GetVacantDriversAsync(_currentDateTime);
             // Assert
-            _httpTest.ShouldHaveCalled(url)
-                .WithVerb(HttpMethod.Get);
+            _httpTest.ShouldHaveCalled(_url).WithVerb(HttpMethod.Get);
         }
 
         [Fact]
@@ -87,20 +78,8 @@ namespace Core.BusinessLogic.Tests.WebServices
             // Arrange
             var drivers = DriverFake.Generate(4);
             _httpTest.RespondWithJson(drivers);
-            var currentDateTime = _faker.Date.Recent();
-            var url = _faker.Internet.Url();
-
-            #region UrlBuilder
-
-            var restServiceSettings = Substitute.For<RestServiceSettings>();
-            var urlBuilder = Substitute.For<DriverRestServiceUrlBuilder>(restServiceSettings);
-            urlBuilder.GetVacantDriversUrl(Arg.Any<DateTime>()).Returns(url);
-
-            #endregion
-
-            var restService = CreateTestedComponent(urlBuilder);
             // Act
-            var vacantDrivers = await restService.GetVacantDriversAsync(currentDateTime);
+            var vacantDrivers = await _restService.GetVacantDriversAsync(_currentDateTime);
             // Assert
             Assert.Equal(drivers.Count, vacantDrivers.Count);
             Assert.All(vacantDrivers, driver => drivers.Exists(e => e.Id == driver.Id));
