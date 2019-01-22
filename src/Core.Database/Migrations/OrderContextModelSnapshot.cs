@@ -14,9 +14,9 @@ namespace Core.Database.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024");
+                .HasAnnotation("ProductVersion", "2.1.0-rtm-30799");
 
-            modelBuilder.Entity("Core.Database.Driver", b =>
+            modelBuilder.Entity("Core.Models.Driver", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -30,7 +30,7 @@ namespace Core.Database.Migrations
                     b.ToTable("Drivers");
                 });
 
-            modelBuilder.Entity("Core.Database.DriverOrder", b =>
+            modelBuilder.Entity("Core.Models.DriverOrder", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -46,12 +46,14 @@ namespace Core.Database.Migrations
                     b.ToTable("DriverOrders");
                 });
 
-            modelBuilder.Entity("Core.Database.Order", b =>
+            modelBuilder.Entity("Core.Models.Order", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Comments");
+
+                    b.Property<DateTime?>("FinishDateTime");
 
                     b.Property<string>("From");
 

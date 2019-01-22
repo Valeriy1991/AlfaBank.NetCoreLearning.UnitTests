@@ -24,9 +24,9 @@ namespace Taxi.Api.Service.Controllers.v1
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost("make")]
-        public async Task<IActionResult> Make([FromBody]MakeOrderTaxiModel model)
+        public async Task<IActionResult> Make([FromBody]MakeOrderModel model)
         {
-            var makeOrderResult = await _mediator.Send(new MakeTaxiOrderCommandRequest()
+            var makeOrderResult = await _mediator.Send(new MakeOrderCommandRequest()
             {
                 From = model.From,
                 To = model.To,
@@ -36,5 +36,39 @@ namespace Taxi.Api.Service.Controllers.v1
             });
             return Ok(makeOrderResult);
         }
+
+        /// <summary>
+        /// Закрытие заказа
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        [HttpPost("finish/{orderId:int}")]
+        public async Task<IActionResult> Finish(int orderId)
+        {
+            var finishOrderResult = await _mediator.Send(new FinishOrderCommandRequest()
+            {
+                OrderId = orderId
+            });
+            return Ok(finishOrderResult);
+        }
+
+        /// <summary>
+        /// Назначить водителя на заказ
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <param name="driverId"></param>
+        /// <returns></returns>
+        [HttpPost("{orderId:int}/set-driver/{driverId:int}")]
+        public async Task<IActionResult> SetDriver(int orderId, int driverId)
+        {
+            var setDriverForOrderResult = await _mediator.Send(new SetDriverForOrderCommandRequest()
+            {
+                OrderId = orderId,
+                DriverId = driverId
+            });
+            return Ok(setDriverForOrderResult);
+        }
+
+
     }
 }

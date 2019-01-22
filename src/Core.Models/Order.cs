@@ -13,6 +13,7 @@ namespace Core.Models
         public string Comments { get; set; }
         public DateTime When { get; set; }
         public string Status { get; set; }
+        public DateTime? FinishDateTime { get; set; }
         
         [NotMapped]
         public ICollection<Driver> Drivers { get; set; }
