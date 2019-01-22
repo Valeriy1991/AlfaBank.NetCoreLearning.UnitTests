@@ -29,8 +29,7 @@ namespace Core.Database.IntegrationTests.Queries
 
         public DriverByIdQueryTests()
         {
-            // Т.к. мы только читаем данные из БД, то не используем транзакционность
-            _dbExecutor = CreateDbExecutor();
+            _dbExecutor = CreateTransactionalDbExecutor();
             _query = CreateTestedComponent(_dbExecutor);
         }
 
